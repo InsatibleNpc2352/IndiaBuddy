@@ -1,24 +1,61 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import SearchBar from '../../components/SearchBar';
 import PriceChart from '../../components/PriceChart';
 import NewsReport from '../../components/NewsReport';
 import CalendarPicker from '../../components/CalendarPicker';
 import { useSearchStore } from '../../store/searchStore';
 
-export default function PredictPage() {
-  const { origin, destination, selectedMode, predict, fetchInitialData } = useSearchStore();
+export const dynamic = 'force-dynamic';
+
+function PredictContent() {
+  const searchParams = useSearchParams();
+  const {
+    origin,
+    destination,
+    selectedMode,
+    predict,
+    fetchInitialData,
+    setOrigin,
+    setDestination,
+    setMode,
+    setDate,
+  } = useSearchStore();
 
   useEffect(() => {
     fetchInitialData();
   }, [fetchInitialData]);
 
+  // Read URL params and hydrate Zustand store on mount or query param change
+  useEffect(() => {
+    const urlOrigin = searchParams.get('origin');
+    const urlDest = searchParams.get('destination');
+    const urlMode = searchParams.get('mode') as any;
+    const urlDate = searchParams.get('date');
+
+    if (urlOrigin && urlOrigin !== origin) setOrigin(urlOrigin);
+    if (urlDest && urlDest !== destination) setDestination(urlDest);
+    if (urlMode && urlMode !== selectedMode) setMode(urlMode);
+    if (urlDate) setDate(new Date(urlDate + 'T00:00:00'));
+
+    const effectiveOrigin = urlOrigin || origin;
+    const effectiveDest = urlDest || destination;
+
+    if (effectiveOrigin && effectiveDest) {
+      predict();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  // Trigger predict when mode changes
   useEffect(() => {
     if (origin && destination) {
       predict();
     }
-  }, [origin, destination, selectedMode, predict]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMode]);
 
   return (
     <div className="flex flex-col gap-8 animate-fade-in max-w-6xl mx-auto">
@@ -61,5 +98,20 @@ export default function PredictPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function PredictPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+          <div className="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Loading price predictor...</p>
+        </div>
+      }
+    >
+      <PredictContent />
+    </Suspense>
   );
 }

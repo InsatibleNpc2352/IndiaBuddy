@@ -16,7 +16,12 @@ const nextConfig = {
     ]
   },
   async rewrites() {
-    const backendUrl = process.env.BACKEND_URL || (process.env.NODE_ENV === 'production' && process.env.DOCKER_CONTAINER ? 'http://backend:8000' : 'http://127.0.0.1:8000');
+    // BACKEND_URL is the server-side rewrite target.
+    // In production on Vercel, set BACKEND_URL to the deployed backend public URL.
+    // Locally it falls back to http://127.0.0.1:8000.
+    const backendUrl =
+      process.env.BACKEND_URL ||
+      (process.env.DOCKER_CONTAINER ? 'http://backend:8000' : 'http://127.0.0.1:8000');
     return [
       {
         source: '/api/:path*',

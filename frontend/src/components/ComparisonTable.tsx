@@ -4,7 +4,18 @@ import React, { useState } from 'react';
 import { useSearchStore } from '../store/searchStore';
 import TransportCard from './TransportCard';
 import { Plane, Train, Bus, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { ScoredOption, Tier } from '../types';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
 
 function ModeColumn({
   icon: Icon,
@@ -26,10 +37,11 @@ function ModeColumn({
   const sorted = [...(options ?? [])].sort(
     (a, b) => b.scores[activeTier] - a.scores[activeTier]
   );
-  const visible = showAll ? sorted : sorted.slice(0, 2);
+  const initialCards = sorted.slice(0, 2);
+  const extraCards = sorted.slice(2);
 
   return (
-    <div className="flex flex-col gap-3">
+    <motion.div layout className="flex flex-col gap-3">
       {/* Column header */}
       <div className={`flex items-center gap-2 pb-2 border-b-2 ${accentClass}`}>
         <Icon className="w-5 h-5" />
@@ -41,14 +53,40 @@ function ModeColumn({
 
       {/* Cards */}
       {sorted.length === 0 ? (
-        <div className="text-gray-400 dark:text-gray-500 text-sm text-center py-10 bg-gray-50 dark:bg-gray-800/40 rounded-xl">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-gray-400 dark:text-gray-500 text-sm text-center py-10 bg-gray-50 dark:bg-gray-800/40 rounded-xl"
+        >
           {emptyMsg}
-        </div>
+        </motion.div>
       ) : (
-        <>
-          {visible.map((opt) => (
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          layout
+          className="flex flex-col gap-3"
+        >
+          {initialCards.map((opt) => (
             <TransportCard key={opt.id} option={opt} />
           ))}
+
+          <AnimatePresence>
+            {showAll && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-3 overflow-hidden"
+              >
+                {extraCards.map((opt) => (
+                  <TransportCard key={opt.id} option={opt} />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {sorted.length > 2 && (
             <button
@@ -62,9 +100,9 @@ function ModeColumn({
               )}
             </button>
           )}
-        </>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -103,7 +141,13 @@ export default function ComparisonTable() {
   const { flights = [], trains = [], buses = [] } = searchResults;
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-4">
+    <motion.div
+      layout
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="w-full max-w-6xl mx-auto mt-4"
+    >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <ModeColumn
           icon={Plane}
@@ -130,6 +174,6 @@ export default function ComparisonTable() {
           accentClass="border-amber-400"
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 import logging
+import re
 
 from config import settings
 from database import init_db
@@ -16,10 +17,35 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="IndiaBuddy Travel Tracker", version="1.0.0")
 
+# Build CORS origin list — always include Vercel deployment + localhost dev
+_base_origins = list(settings.CORS_ORIGINS)
+_extra_origins = [
+    "https://frontend-steel-xi-11.vercel.app",
+    "https://indiabuddy.vercel.app",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+for _o in _extra_origins:
+    if _o not in _base_origins:
+        _base_origins.append(_o)
+
+def _is_allowed_origin(origin: str) -> bool:
+    """Allow any *.vercel.app subdomain at runtime (covers preview deployments)."""
+    if origin in _base_origins:
+        return True
+    if re.match(r"https://[a-zA-Z0-9-]+(\.vercel\.app)$", origin):
+        return True
+    return False
+
+class DynamicCORSMiddleware:
+    """Wraps CORSMiddleware with dynamic origin checking for *.vercel.app."""
+    pass
+
 # Middlewares
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=_base_origins,
+    allow_origin_regex=r"https://[a-zA-Z0-9\-]+\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

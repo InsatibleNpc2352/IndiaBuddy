@@ -4,6 +4,7 @@ import React from 'react';
 import { ScoredOption } from '../types';
 import { useSearchStore } from '../store/searchStore';
 import { Clock, Tag, ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function TransportCard({ option }: { option: ScoredOption }) {
   const { activeTier } = useSearchStore();
@@ -27,7 +28,15 @@ export default function TransportCard({ option }: { option: ScoredOption }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 hover:shadow-md transition-shadow relative group">
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ duration: 0.25 }}
+      className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 hover:shadow-md transition-shadow relative group"
+    >
       
       {/* Top row: Operator and Score */}
       <div className="flex justify-between items-start mb-4">
@@ -45,9 +54,14 @@ export default function TransportCard({ option }: { option: ScoredOption }) {
           </div>
         </div>
         
-        <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-sm ${getScoreColor(option.scores[activeTier])}`}>
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-sm ${getScoreColor(option.scores[activeTier])}`}
+        >
           {option.scores[activeTier]}
-        </div>
+        </motion.div>
       </div>
 
       {/* Price and Duration */}
@@ -81,9 +95,14 @@ export default function TransportCard({ option }: { option: ScoredOption }) {
 
       {/* Tiers micro-bars */}
       <div className="grid grid-cols-5 gap-1 mb-4 h-8" title="Scores: Fastest, Comfort, Cost, Overall, Economic">
-        {Object.entries(option.scores).map(([tier, score]) => (
+        {Object.entries(option.scores).map(([tier, score], idx) => (
           <div key={tier} className="h-full flex flex-col justify-end group/bar relative">
-            <div className={`w-full rounded-t-sm opacity-60 ${activeTier === tier ? '!opacity-100' : ''} ${getBarColor(score)}`} style={{ height: `${score}%` }} />
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: `${score}%` }}
+              transition={{ duration: 0.4, delay: idx * 0.05 }}
+              className={`w-full rounded-t-sm opacity-60 ${activeTier === tier ? '!opacity-100' : ''} ${getBarColor(score)}`}
+            />
             {/* Tooltip */}
             <div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 pointer-events-none whitespace-nowrap z-10">
               {tier}: {score}
@@ -109,6 +128,6 @@ export default function TransportCard({ option }: { option: ScoredOption }) {
       >
         Book Now <ExternalLink className="w-4 h-4" />
       </a>
-    </div>
+    </motion.div>
   );
 }

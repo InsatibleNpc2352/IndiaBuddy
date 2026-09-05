@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useSearchStore } from '../../store/searchStore';
 import SearchBar from '../../components/SearchBar';
@@ -12,7 +12,9 @@ import PromoPanel from '../../components/PromoPanel';
 import PriceChart from '../../components/PriceChart';
 import { Tag, AlertCircle } from 'lucide-react';
 
-export default function ResultsPage() {
+export const dynamic = 'force-dynamic';
+
+function ResultsContent() {
   const searchParams = useSearchParams();
   const {
     origin, destination, selectedDate, selectedMode,
@@ -34,14 +36,14 @@ export default function ResultsPage() {
     const effectiveDestination = urlDest || destination;
 
     let effectiveDate = selectedDate;
-    if (urlDate && !selectedDate) {
+    if (urlDate) {
       effectiveDate = new Date(urlDate + 'T00:00:00');
     }
 
     // Hydrate store from URL if store was reset (e.g. hard reload)
     if (urlOrigin && urlOrigin !== origin) setOrigin(urlOrigin);
     if (urlDest && urlDest !== destination) setDestination(urlDest);
-    if (effectiveDate && !selectedDate) setDate(effectiveDate);
+    if (effectiveDate) setDate(effectiveDate);
     if (urlMode && urlMode !== selectedMode) setMode(urlMode);
 
     if (effectiveOrigin && effectiveDestination && effectiveDate) {
@@ -51,7 +53,7 @@ export default function ResultsPage() {
 
     fetchInitialData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams]);
 
   const hasResults = searchResults && (
     (searchResults.flights?.length ?? 0) +
@@ -121,5 +123,20 @@ export default function ResultsPage() {
 
       <PromoPanel isOpen={isPromoOpen} onClose={() => setIsPromoOpen(false)} />
     </div>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+          <div className="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Loading search results...</p>
+        </div>
+      }
+    >
+      <ResultsContent />
+    </Suspense>
   );
 }

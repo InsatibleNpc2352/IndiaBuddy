@@ -5,9 +5,10 @@ import SearchBar from '../components/SearchBar';
 import NewsReport from '../components/NewsReport';
 import { useSearchStore } from '../store/searchStore';
 import { Map, Zap, TrendingDown, Bell, Shield, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Home() {
-  const { fetchInitialData } = useSearchStore();
+  const { fetchInitialData, setOrigin, setDestination } = useSearchStore();
 
   useEffect(() => {
     fetchInitialData();
@@ -24,12 +25,22 @@ export default function Home() {
     <div className="flex flex-col gap-16 pb-16">
       {/* Hero Section */}
       <section className="text-center pt-10 pb-6">
-        <h1 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-6 tracking-tight">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-6 tracking-tight"
+        >
           Find the <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-400">Smartest</span> Way <br className="hidden md:block"/> to Travel India
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10">
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+          className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10"
+        >
           Compare flights, trains, and buses in one click. Our AI predicts prices and finds hidden promo codes to save you money.
-        </p>
+        </motion.p>
         
         <div className="-mt-4 relative z-10">
           <SearchBar />
@@ -38,9 +49,19 @@ export default function Home() {
         <div className="flex flex-wrap justify-center gap-3 mt-8">
           <span className="text-sm text-gray-500 py-1.5 px-2">Popular:</span>
           {quickLinks.map((link, i) => (
-            <button key={i} className="text-sm font-medium bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-1.5 hover:border-primary-500 hover:text-primary-600 transition-colors shadow-sm">
+            <motion.button
+              key={i}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              onClick={() => {
+                setOrigin(link.origin);
+                setDestination(link.dest);
+              }}
+              className="text-sm font-medium bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-1.5 hover:border-primary-500 hover:text-primary-600 transition-colors shadow-sm cursor-pointer"
+            >
               {link.origin} → {link.dest}
-            </button>
+            </motion.button>
           ))}
         </div>
       </section>
