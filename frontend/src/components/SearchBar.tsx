@@ -32,7 +32,7 @@ export default function SearchBar() {
       if (q.length > 1) {
         try {
           const cities = await getCities(q);
-          setter(cities);
+          setter(cities.map(c => c.name));
         } catch {
           setter([]);
         }
@@ -49,7 +49,7 @@ export default function SearchBar() {
       if (q.length > 1) {
         try {
           const cities = await getCities(q);
-          setter(cities);
+          setter(cities.map(c => c.name));
         } catch {
           setter([]);
         }

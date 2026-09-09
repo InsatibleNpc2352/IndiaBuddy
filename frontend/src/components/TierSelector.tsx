@@ -4,14 +4,13 @@ import React from 'react';
 import { useSearchStore } from '../store/searchStore';
 import { Tier } from '../types';
 import { motion } from 'framer-motion';
-import { Zap, Armchair, IndianRupee, Star, Coins } from 'lucide-react';
+import { Zap, Armchair, IndianRupee, Star } from 'lucide-react';
 
 const tiers: { id: Tier; label: string; icon: any }[] = [
   { id: 'fastest', label: 'Fastest', icon: Zap },
   { id: 'comfort', label: 'Best Comfort', icon: Armchair },
   { id: 'cost', label: 'Best Cost', icon: IndianRupee },
   { id: 'overall', label: 'Best Overall', icon: Star },
-  { id: 'economic', label: 'Most Economic', icon: Coins },
 ];
 
 export default function TierSelector() {
