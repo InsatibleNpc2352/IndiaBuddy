@@ -1,5 +1,5 @@
 export type TransportMode = 'flights' | 'trains' | 'buses' | 'all';
-export type Tier = 'fastest' | 'comfort' | 'cost' | 'overall' | 'economic';
+export type Tier = 'fastest' | 'comfort' | 'cost' | 'overall';
 
 export interface TransportOption {
   id: string;

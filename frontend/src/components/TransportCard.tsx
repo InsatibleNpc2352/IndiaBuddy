@@ -94,7 +94,7 @@ export default function TransportCard({ option }: { option: ScoredOption }) {
       </div>
 
       {/* Tiers micro-bars */}
-      <div className="grid grid-cols-5 gap-1 mb-4 h-8" title="Scores: Fastest, Comfort, Cost, Overall, Economic">
+      <div className="grid grid-cols-4 gap-1 mb-4 h-8" title="Scores: Fastest, Comfort, Cost, Overall">
         {Object.entries(option.scores).map(([tier, score], idx) => (
           <div key={tier} className="h-full flex flex-col justify-end group/bar relative">
             <motion.div
