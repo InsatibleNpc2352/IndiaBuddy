@@ -6,8 +6,17 @@ import { useSearchStore } from '../store/searchStore';
 import { Clock, Tag, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function TransportCard({ option }: { option: ScoredOption }) {
-  const { activeTier } = useSearchStore();
+/**
+ * ⚡ Bolt Performance Optimization
+ * 💡 What: Wrapped TransportCard in React.memo and optimized Zustand store subscription.
+ * 🎯 Why: Previously, this component subscribed to the entire store and re-rendered on ANY store change.
+ *         Now, it only re-renders when activeTier or option props change.
+ * 📊 Impact: Prevents O(N) re-renders in ComparisonTable when other store values (like promos or dailyReport) update.
+ *            Expected to reduce re-renders of the list items significantly during general state updates.
+ */
+const TransportCard = React.memo(function TransportCard({ option }: { option: ScoredOption }) {
+  // Use selector to only subscribe to activeTier, preventing re-renders on unrelated store changes
+  const activeTier = useSearchStore((state) => state.activeTier);
 
   const formatDuration = (mins: number) => {
     const h = Math.floor(mins / 60);
@@ -130,4 +139,6 @@ export default function TransportCard({ option }: { option: ScoredOption }) {
       </a>
     </motion.div>
   );
-}
+});
+
+export default TransportCard;
