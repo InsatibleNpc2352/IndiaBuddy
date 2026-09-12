@@ -7,7 +7,8 @@ import { differenceInDays, isBefore, startOfDay } from 'date-fns';
 import { useSearchStore } from '../store/searchStore';
 
 export default function CalendarPicker({ onClose }: { onClose?: () => void }) {
-  const { selectedDate, setDate } = useSearchStore();
+  const selectedDate = useSearchStore(state => state.selectedDate);
+  const setDate = useSearchStore(state => state.setDate);
   const today = startOfDay(new Date());
 
   const handleSelect = (date: Date | undefined) => {

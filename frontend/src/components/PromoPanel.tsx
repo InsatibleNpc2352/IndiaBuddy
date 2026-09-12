@@ -7,7 +7,7 @@ import { X, Copy, CheckCircle, AlertCircle, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function PromoPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { promos } = useSearchStore();
+  const promos = useSearchStore(state => state.promos);
   const [filter, setFilter] = useState<'all' | 'flights' | 'trains' | 'buses'>('all');
 
   const filteredPromos = promos.filter(p => filter === 'all' || p.mode === filter || p.mode === 'all');

@@ -7,7 +7,9 @@ import { useSearchStore } from '../store/searchStore';
 
 export default function AlternativeBanner() {
   const [isVisible, setIsVisible] = useState(true);
-  const { searchResults, activeTier, setMode } = useSearchStore();
+  const searchResults = useSearchStore(state => state.searchResults);
+  const activeTier = useSearchStore(state => state.activeTier);
+  const setMode = useSearchStore(state => state.setMode);
 
   if (!isVisible || !searchResults) return null;
 

@@ -19,7 +19,9 @@ import { format, parseISO } from 'date-fns';
 import { useSearchStore } from '../store/searchStore';
 
 export default function PriceChart() {
-  const { prediction, selectedDate, selectedMode } = useSearchStore();
+  const prediction = useSearchStore(state => state.prediction);
+  const selectedDate = useSearchStore(state => state.selectedDate);
+  const selectedMode = useSearchStore(state => state.selectedMode);
   const [view, setView] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
 
   const filteredPrediction = useMemo(() => {

@@ -14,7 +14,15 @@ export default function SearchBar() {
   const router = useRouter();
   const pathname = usePathname();
   const isPredict = pathname === '/predict' || pathname?.startsWith('/predict');
-  const { origin, destination, setOrigin, setDestination, selectedDate, selectedMode, setMode, search, predict } = useSearchStore();
+  const origin = useSearchStore(state => state.origin);
+  const destination = useSearchStore(state => state.destination);
+  const setOrigin = useSearchStore(state => state.setOrigin);
+  const setDestination = useSearchStore(state => state.setDestination);
+  const selectedDate = useSearchStore(state => state.selectedDate);
+  const selectedMode = useSearchStore(state => state.selectedMode);
+  const setMode = useSearchStore(state => state.setMode);
+  const search = useSearchStore(state => state.search);
+  const predict = useSearchStore(state => state.predict);
   const [originQuery, setOriginQuery] = useState(origin);
   const [destQuery, setDestQuery] = useState(destination);
   const [originSuggestions, setOriginSuggestions] = useState<string[]>([]);

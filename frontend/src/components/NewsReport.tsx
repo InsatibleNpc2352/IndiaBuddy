@@ -6,7 +6,7 @@ import { Newspaper, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function NewsReport() {
-  const { dailyReport } = useSearchStore();
+  const dailyReport = useSearchStore(state => state.dailyReport);
 
   if (!dailyReport) return null;
 
