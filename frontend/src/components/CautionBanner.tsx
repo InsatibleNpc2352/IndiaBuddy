@@ -6,7 +6,7 @@ import { useSearchStore } from '../store/searchStore';
 import { differenceInDays, startOfDay } from 'date-fns';
 
 export default function CautionBanner() {
-  const { selectedDate } = useSearchStore();
+  const selectedDate = useSearchStore(state => state.selectedDate);
 
   if (!selectedDate) return null;
 

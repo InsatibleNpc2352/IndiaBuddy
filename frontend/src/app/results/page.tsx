@@ -16,12 +16,21 @@ export const dynamic = 'force-dynamic';
 
 function ResultsContent() {
   const searchParams = useSearchParams();
-  const {
-    origin, destination, selectedDate, selectedMode,
-    search, predict, fetchInitialData, promos,
-    searchResults, isLoading, error,
-    setOrigin, setDestination, setDate, setMode,
-  } = useSearchStore();
+  const origin = useSearchStore(state => state.origin);
+  const destination = useSearchStore(state => state.destination);
+  const selectedDate = useSearchStore(state => state.selectedDate);
+  const selectedMode = useSearchStore(state => state.selectedMode);
+  const search = useSearchStore(state => state.search);
+  const predict = useSearchStore(state => state.predict);
+  const fetchInitialData = useSearchStore(state => state.fetchInitialData);
+  const promos = useSearchStore(state => state.promos);
+  const searchResults = useSearchStore(state => state.searchResults);
+  const isLoading = useSearchStore(state => state.isLoading);
+  const error = useSearchStore(state => state.error);
+  const setOrigin = useSearchStore(state => state.setOrigin);
+  const setDestination = useSearchStore(state => state.setDestination);
+  const setDate = useSearchStore(state => state.setDate);
+  const setMode = useSearchStore(state => state.setMode);
   const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   // On first load: read URL params → hydrate store → trigger search

@@ -7,7 +7,11 @@ import { Mode } from '../../src/types';
 
 export default function SearchScreen() {
   const router = useRouter();
-  const { origin, destination, date, mode, setSearchData } = useSearchStore();
+  const origin = useSearchStore(state => state.origin);
+  const destination = useSearchStore(state => state.destination);
+  const date = useSearchStore(state => state.date);
+  const mode = useSearchStore(state => state.mode);
+  const setSearchData = useSearchStore(state => state.setSearchData);
 
   const handleSearch = () => {
     if (origin && destination) {

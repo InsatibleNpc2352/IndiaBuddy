@@ -15,7 +15,8 @@ const tiers: { id: Tier; label: string; icon: any }[] = [
 ];
 
 export default function TierSelector() {
-  const { activeTier, setActiveTier } = useSearchStore();
+  const activeTier = useSearchStore(state => state.activeTier);
+  const setActiveTier = useSearchStore(state => state.setActiveTier);
 
   return (
     <div className="w-full max-w-4xl mx-auto flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1 relative">

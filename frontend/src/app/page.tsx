@@ -8,7 +8,9 @@ import { Map, Zap, TrendingDown, Bell, Shield, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Home() {
-  const { fetchInitialData, setOrigin, setDestination } = useSearchStore();
+  const fetchInitialData = useSearchStore(state => state.fetchInitialData);
+  const setOrigin = useSearchStore(state => state.setOrigin);
+  const setDestination = useSearchStore(state => state.setDestination);
 
   useEffect(() => {
     fetchInitialData();

@@ -7,7 +7,7 @@ import { Clock, Tag, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function TransportCard({ option }: { option: ScoredOption }) {
-  const { activeTier } = useSearchStore();
+  const activeTier = useSearchStore(state => state.activeTier);
 
   const formatDuration = (mins: number) => {
     const h = Math.floor(mins / 60);

@@ -12,17 +12,15 @@ export const dynamic = 'force-dynamic';
 
 function PredictContent() {
   const searchParams = useSearchParams();
-  const {
-    origin,
-    destination,
-    selectedMode,
-    predict,
-    fetchInitialData,
-    setOrigin,
-    setDestination,
-    setMode,
-    setDate,
-  } = useSearchStore();
+  const origin = useSearchStore(state => state.origin);
+  const destination = useSearchStore(state => state.destination);
+  const selectedMode = useSearchStore(state => state.selectedMode);
+  const predict = useSearchStore(state => state.predict);
+  const fetchInitialData = useSearchStore(state => state.fetchInitialData);
+  const setOrigin = useSearchStore(state => state.setOrigin);
+  const setDestination = useSearchStore(state => state.setDestination);
+  const setMode = useSearchStore(state => state.setMode);
+  const setDate = useSearchStore(state => state.setDate);
 
   useEffect(() => {
     fetchInitialData();

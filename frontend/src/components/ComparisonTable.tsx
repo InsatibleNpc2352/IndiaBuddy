@@ -107,7 +107,9 @@ function ModeColumn({
 }
 
 export default function ComparisonTable() {
-  const { searchResults, activeTier, isLoading } = useSearchStore();
+  const searchResults = useSearchStore(state => state.searchResults);
+  const activeTier = useSearchStore(state => state.activeTier);
+  const isLoading = useSearchStore(state => state.isLoading);
 
   /* ── Loading skeleton ── */
   if (isLoading) {
